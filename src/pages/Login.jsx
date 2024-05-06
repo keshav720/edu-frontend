@@ -9,13 +9,22 @@ import {
 } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+
 const Login = () => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginError, setLoginError] = useState(null);
+  const [emailError, setEmailError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
   const navigate = useNavigate();
 
   const handleLogin = () => {
+    // Reset previous errors
+    setLoginError(null);
+    setEmailError(null);
+    setPasswordError(null);
+
     const user = { email, password };
     dispatch(setLoading(true));
     login(user)
@@ -26,7 +35,11 @@ const Login = () => {
         navigate("/");
       })
       .catch((err) => {
-        setError(err.message); // Set error message
+        console.log("error--",err);
+        setLoginError(
+          err?.message ||
+            "Login failed. Please check your credentials."
+        );
         dispatch(setLoading(false));
       });
   };
@@ -39,21 +52,24 @@ const Login = () => {
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="mb-4 w-64 px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+        className="mb-2 w-64 px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
       />
+      {emailError && <p className="text-red-500">{emailError}</p>}
       <input
         type="password"
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="mb-4 w-64 px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+        className="mb-2 w-64 px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
       />
+      {passwordError && <p className="text-red-500">{passwordError}</p>}
       <button
         onClick={handleLogin}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       >
         Login
       </button>
+      {loginError && <p className="text-red-500">{loginError}</p>}
       <p className="mt-4 text-white">
         Don't have an account?{" "}
         <Link to="/signup" className="text-blue-500">

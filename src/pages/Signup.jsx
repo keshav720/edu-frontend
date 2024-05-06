@@ -20,6 +20,7 @@ const SignUpForm = () => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+  const [signupError, setSignupError] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,7 +37,7 @@ const SignUpForm = () => {
         navigate("/");
       })
       .catch((error) => {
-        dispatch(setError(error.message));
+        setSignupError(error.message);
         dispatch(setLoading(false));
       });
   };
@@ -87,6 +88,8 @@ const SignUpForm = () => {
             placeholder="Enter your password"
           />
         </div>
+                {signupError && <p className="text-red-500 mb-4">{signupError}</p>} {/* Display error message */}
+
         {/* other form fields */}
         <button
           type="submit"
