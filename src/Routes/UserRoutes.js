@@ -9,7 +9,6 @@ import CourseList from '../pages/courses/CourseList';
 import CourseDetails from '../pages/courses/CourseDetails';
 import { useSelector } from 'react-redux';
 import Navbar from '../components/Navbar';
-import MyCourses from '../pages/courses/MyCourses';
 const UserRoutes = () => {
     const isLoggedIn = useSelector((state) => state?.auth?.isAuthenticated);
 console.log("isLoggedIn",isLoggedIn);
