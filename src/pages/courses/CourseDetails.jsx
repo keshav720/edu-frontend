@@ -14,7 +14,7 @@ import {
 } from "../../services/courseContentServices";
 import { useSelector } from "react-redux";
 import CourseContentPopup from "./courseContent/CourseContentPopup";
-function CourseDetails() {
+const CourseDetails=()=> {
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
   const [courseContent, setCourseContent] = useState([]);
