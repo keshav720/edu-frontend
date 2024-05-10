@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import { createCourse } from "../../services/courseServices.js";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { createCourseContent } from "../../../services/courseContentServices";
 import { useSelector } from "react-redux";
-const CourseCreate = () => {
+const CourseContentCreate = () => {
+  const courseId = useParams();
+  const { user } = useSelector((state) => state?.auth);
+  const Role = user?.role;
+  console.log("courseId--------",courseId.courseId);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     image: "",
+    courseId: courseId?.courseId,
   });
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state?.auth);
-  const Role = user?.role;
-  console.log("role in create course ",user);
+
   const handleChange = (event) => {
     const { value, name } = event?.target;
     setFormData({ ...formData, [name]: value });
@@ -26,8 +29,9 @@ const CourseCreate = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await createCourse(formData);
-      navigate(`/${Role}/courses`);
+        console.log("we are in handle sunmit");
+      await createCourseContent(formData);
+      navigate("/admin/courses");
     } catch (error) {
       console.error("Error creating course:", error.message);
     }
@@ -35,11 +39,11 @@ const CourseCreate = () => {
 
   return (
     <div className="container mx-auto mt-8 flex justify-center">
-      <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
-        <h1 className="text-3xl text-orange-500 font-bold mb-4">
-          Create New Course
-        </h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-8">
+      <h1 className="text-3xl text-orange-500 font-bold mb-4">
+        Add More Course content
+      </h1>
+      <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="title"
@@ -102,12 +106,12 @@ const CourseCreate = () => {
             type="submit"
             className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            Create Course
+            Add Content
           </button>
         </form>
-      </div>
+    </div>
     </div>
   );
 };
 
-export default CourseCreate;
+export default CourseContentCreate;

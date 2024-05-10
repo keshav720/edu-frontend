@@ -11,7 +11,7 @@ import {
 } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 
-const SignUpForm = () => {
+const Signup= () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -43,14 +43,14 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="bg-gray-800 min-h-screen flex flex-col justify-center items-center">
+    <div className="bg-white-800 min-h-screen flex flex-col justify-center items-center">
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-800 max-w-md mx-auto p-8 rounded-lg shadow-lg"
+        className="bg-white-400 max-w-md mx-auto p-8 rounded-lg shadow-lg"
       >
-        <div className="text-white font-bold mb-8">SignUp to EduApp</div>
+        <div className="text-orange-500 font-bold mb-8">SignUp to EduApp</div>
         <div className="mb-4">
-          <label htmlFor="name" className="block text-white font-bold mb-2">
+          <label htmlFor="name" className="block text-orange-500 font-bold mb-2">
             Name
           </label>
           <input
@@ -63,7 +63,7 @@ const SignUpForm = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="email" className="block text-white font-bold mb-2">
+          <label htmlFor="email" className="block text-orange-500 font-bold mb-2">
             Email
           </label>
           <input
@@ -76,7 +76,7 @@ const SignUpForm = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="password" className="block text-white font-bold mb-2">
+          <label htmlFor="password" className="block text-orange-500 font-bold mb-2">
             Password
           </label>
           <input
@@ -93,13 +93,13 @@ const SignUpForm = () => {
         {/* other form fields */}
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-orange-500 hover:bg-orange-800 text-white-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
           Sign Up
         </button>
-        <p className="mt-4 text-white">
+        <p className="mt-4 text-orange-500">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500">
+          <Link to="/user/login" className="text-orange-800">
             Login
           </Link>
         </p>
@@ -108,4 +108,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default Signup;

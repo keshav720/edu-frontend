@@ -18,7 +18,9 @@ const Login = () => {
   const [emailError, setEmailError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
   const navigate = useNavigate();
-
+  const urlPath = window.location.pathname;
+  const isAdminRoute = urlPath.startsWith('/admin');
+  console.log("isAdminRoute-",isAdminRoute);
   const handleLogin = () => {
     // Reset previous errors
     setLoginError(null);
@@ -29,11 +31,12 @@ const Login = () => {
     dispatch(setLoading(true));
     login(user)
       .then((response) => {
-        dispatch(setToken(response.token));
-        dispatch(setUser(response.user));
+          dispatch(setToken(response?.token));
+        dispatch(setUser(response?.user));
         dispatch(setLoading(false));
-        navigate("/");
-      })
+        const isAdminAccessAllowed = isAdminRoute ? response?.user?.role === 'admin' : true;
+        isAdminAccessAllowed ? navigate(`/${response?.user?.role}/home`) : setLoginError("Only admins can access this page.");
+        })
       .catch((err) => {
         console.log("error--",err);
         setLoginError(
@@ -45,8 +48,8 @@ const Login = () => {
   };
 
   return (
-    <div className="bg-gray-800 min-h-screen flex flex-col items-center justify-center">
-      <div className="text-white font-bold mb-8">Login to EduApp</div>
+    <div className="bg-white-800 min-h-screen flex flex-col items-center justify-center">
+      <div className="text-orange-500 font-bold mb-8">Login to EduApp</div>
       <input
         type="text"
         placeholder="Email"
@@ -65,17 +68,17 @@ const Login = () => {
       {passwordError && <p className="text-red-500">{passwordError}</p>}
       <button
         onClick={handleLogin}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       >
         Login
       </button>
       {loginError && <p className="text-red-500">{loginError}</p>}
-      <p className="mt-4 text-white">
+     {!isAdminRoute && <p className="mt-4 text-orange-500">
         Don't have an account?{" "}
-        <Link to="/signup" className="text-blue-500">
+        <Link to="/user/signup" className="text-orange-400">
           Sign up
         </Link>
-      </p>
+      </p>}
     </div>
   );
 };

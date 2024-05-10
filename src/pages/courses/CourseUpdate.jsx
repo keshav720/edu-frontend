@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getCourseById, updateCourseById } from "../../services/courseServices";
+import { useSelector } from "react-redux";
 const CourseUpdate = () => {
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
-
+  const {  user } = useSelector((state) => state?.auth);
+  const isAdmin = user?.role === 'admin';
+  const Role = user?.role ;
   useEffect(() => {
     getCourseById(courseId)
       .then((response) => {
@@ -24,7 +27,7 @@ const CourseUpdate = () => {
     e.preventDefault();
     try {
       await updateCourseById(courseId, { title, description });
-      navigate(`/courses/${courseId}`);
+      navigate(`/${Role}/courses/${courseId}`);
     } catch (error) {
       console.error("Error updating course:", error.message);
     }
@@ -33,9 +36,9 @@ const CourseUpdate = () => {
   if (!course) return <div>Loading...</div>;
 
   return (
-    <div className="container mx-auto mt-8">
-      <h1 className="text-3xl font-bold mb-4">Update Course</h1>
-      <form onSubmit={handleSubmit}>
+    <div className="container mx-auto mt-8 flex justify-center">
+      <h1 className="text-3xl text-orange-500 font-bold mb-4">Update Course</h1>
+      <form onSubmit={handleSubmit} className="w-full max-w-md mx-auto">
         <div className="mb-4">
           <label htmlFor="title" className="block text-gray-700 font-bold mb-2">
             Title
@@ -64,9 +67,10 @@ const CourseUpdate = () => {
             required
           />
         </div>
+        
         <button
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-orange-500 hover:bg-orange-700 text-white  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
           Update Course
         </button>
