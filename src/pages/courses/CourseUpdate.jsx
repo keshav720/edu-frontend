@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getCourseById, updateCourseById } from "../../services/courseServices";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
+import {
+  setLoading,
+} from "../../redux/slices/userSlice.js";
+import { ClipLoader } from "react-spinners";
 const CourseUpdate = () => {
   const { courseId } = useParams();
+  const dispatch = useDispatch();
   const [course, setCourse] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
-  const {  user } = useSelector((state) => state?.auth);
+  const {  user,loading } = useSelector((state) => state?.auth);
   const isAdmin = user?.role === 'admin';
   const Role = user?.role ;
   useEffect(() => {
@@ -24,12 +29,16 @@ const CourseUpdate = () => {
   }, [courseId]);
 
   const handleSubmit = async (e) => {
+    dispatch(setLoading(true));
     e.preventDefault();
     try {
       await updateCourseById(courseId, { title, description });
       navigate(`/${Role}/courses/${courseId}`);
     } catch (error) {
       console.error("Error updating course:", error.message);
+    }
+    finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -72,7 +81,11 @@ const CourseUpdate = () => {
           type="submit"
           className="bg-orange-500 hover:bg-orange-700 text-white  font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
-          Update Course
+             {loading ? (
+          <ClipLoader size={20} color={"#ffffff"} />
+        ) : (
+          `Update Course`
+        )}
         </button>
       </form>
     </div>

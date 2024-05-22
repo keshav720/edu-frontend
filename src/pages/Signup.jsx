@@ -1,6 +1,6 @@
 // SignUpForm.js
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch,useSelector } from "react-redux";
 import { signUp } from "../services/authServices";
 import { Link } from "react-router-dom";
 import {
@@ -10,8 +10,11 @@ import {
   setUser,
 } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { ClipLoader } from "react-spinners";
 
 const Signup= () => {
+  const { loading} = useSelector((state) => state?.auth);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -21,14 +24,13 @@ const Signup= () => {
 
   const dispatch = useDispatch();
   const [signupError, setSignupError] = useState(null);
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault();
     dispatch(setLoading(true));
+    e.preventDefault();
     signUp(formData)
       .then((response) => {
         dispatch(setToken(response.token));
@@ -95,7 +97,11 @@ const Signup= () => {
           type="submit"
           className="bg-orange-500 hover:bg-orange-800 text-white-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
-          Sign Up
+                  {loading ? (
+          <ClipLoader size={20} color={"#ffffff"} />
+        ) : (
+          `Signup`
+        )}
         </button>
         <p className="mt-4 text-orange-500">
           Already have an account?{" "}

@@ -9,7 +9,7 @@ const Navbar = () => {
   const { user } = useSelector((state) => state?.auth);
   const Role = user?.role;
   const navigate = useNavigate();
-
+ const isAdmin=Role==="admin"?true:false;
   const handleLogout = () => {
     dispatch(logout());
     navigate(`/${Role}/login`);
@@ -23,8 +23,10 @@ const Navbar = () => {
           <li><Link to={`/${Role}/courses`} className="hover:text-gray-300">Home</Link></li>
           <li><Link to={`/${Role}/courses`} className="hover:text-gray-300">Courses</Link></li>
           <li><Link to={`/${Role}/courses`} className="hover:text-gray-300">Tests</Link></li>
-          <li><Link to={`/${Role}/courses`} className="hover:text-gray-300">Profile</Link></li>
-          <li><Link to={`/${Role}/my-courses`} className="hover:text-gray-300">My Courses</Link></li>
+          <li><Link to={`/${Role}/profile`} className="hover:text-gray-300">Profile</Link></li>
+          <li><Link to={`/${Role}/subscriptions`} className="hover:text-gray-300">Subscription</Link></li>
+
+         { !isAdmin && <li><Link to={`/${Role}/my-courses`} className="hover:text-gray-300">My Courses</Link></li>}
 
           <li>
             <button onClick={handleLogout} className="hover:text-gray-300 focus:outline-none">

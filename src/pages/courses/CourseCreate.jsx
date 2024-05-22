@@ -1,35 +1,43 @@
 import React, { useState } from "react";
 import { createCourse } from "../../services/courseServices.js";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import {
+  setLoading,
+} from "../../redux/slices/userSlice.js";
+import { ClipLoader } from "react-spinners";
+import { useSelector,useDispatch } from "react-redux";
 const CourseCreate = () => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     image: "",
-  });
+  });  
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state?.auth);
+  const dispatch = useDispatch();
+
+  const { user,loading } = useSelector((state) => state?.auth);
   const Role = user?.role;
-  console.log("role in create course ",user);
   const handleChange = (event) => {
     const { value, name } = event?.target;
     setFormData({ ...formData, [name]: value });
   };
-
-  const handleFileChange = (event) => {
+const handleFileChange = (event) => {
     const file = event.target.files[0];
     console.log(file);
     setFormData({ ...formData, image: file });
   };
 
   const handleSubmit = async (e) => {
+    dispatch(setLoading(true));
     e.preventDefault();
     try {
       await createCourse(formData);
       navigate(`/${Role}/courses`);
     } catch (error) {
       console.error("Error creating course:", error.message);
+    }
+    finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -102,7 +110,11 @@ const CourseCreate = () => {
             type="submit"
             className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            Create Course
+                {loading ? (
+          <ClipLoader size={20} color={"#ffffff"} />
+        ) : (
+          `Create Course`
+        )}
           </button>
         </form>
       </div>

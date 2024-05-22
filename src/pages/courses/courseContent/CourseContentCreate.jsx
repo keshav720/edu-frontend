@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { createCourseContent } from "../../../services/courseContentServices";
-import { useSelector } from "react-redux";
-const CourseContentCreate = () => {
+import {
+  setLoading,
+} from "../../../redux/slices/userSlice";
+import { ClipLoader } from "react-spinners";
+import { useSelector,useDispatch } from "react-redux";const CourseContentCreate = () => {
   const courseId = useParams();
-  const { user } = useSelector((state) => state?.auth);
-  const Role = user?.role;
-  console.log("courseId--------",courseId.courseId);
+  const { loading } = useSelector((state) => state?.auth);
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -27,13 +30,16 @@ const CourseContentCreate = () => {
   };
 
   const handleSubmit = async (e) => {
+    dispatch(setLoading(true));
     e.preventDefault();
     try {
-        console.log("we are in handle sunmit");
       await createCourseContent(formData);
       navigate("/admin/courses");
     } catch (error) {
       console.error("Error creating course:", error.message);
+    }
+    finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -106,7 +112,11 @@ const CourseContentCreate = () => {
             type="submit"
             className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
-            Add Content
+               {loading ? (
+          <ClipLoader size={20} color={"#ffffff"} />
+        ) : (
+          `Add Content`
+        )}
           </button>
         </form>
     </div>

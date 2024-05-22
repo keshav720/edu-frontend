@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../services/authServices";
 import {
   setUser,
@@ -9,9 +9,12 @@ import {
 } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+// Import spinner from react-spinners (optional)
+import { ClipLoader } from "react-spinners";
 
 const Login = () => {
   const dispatch = useDispatch();
+  const {loading} = useSelector((state) => state?.auth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(null);
@@ -19,8 +22,8 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState(null);
   const navigate = useNavigate();
   const urlPath = window.location.pathname;
-  const isAdminRoute = urlPath.startsWith('/admin');
-  console.log("isAdminRoute-",isAdminRoute);
+  const isAdminRoute = urlPath.startsWith("/admin");
+
   const handleLogin = () => {
     // Reset previous errors
     setLoginError(null);
@@ -31,17 +34,20 @@ const Login = () => {
     dispatch(setLoading(true));
     login(user)
       .then((response) => {
-          dispatch(setToken(response?.token));
+        dispatch(setToken(response?.token));
         dispatch(setUser(response?.user));
         dispatch(setLoading(false));
-        const isAdminAccessAllowed = isAdminRoute ? response?.user?.role === 'admin' : true;
-        isAdminAccessAllowed ? navigate(`/${response?.user?.role}/home`) : setLoginError("Only admins can access this page.");
-        })
+        const isAdminAccessAllowed = isAdminRoute
+          ? response?.user?.role === "admin"
+          : true;
+        isAdminAccessAllowed
+          ? navigate(`/${response?.user?.role}/home`)
+          : setLoginError("Only admins can access this page.");
+      })
       .catch((err) => {
-        console.log("error--",err);
+        console.log("error--", err);
         setLoginError(
-          err?.message ||
-            "Login failed. Please check your credentials."
+          err?.message || "Login failed. Please check your credentials."
         );
         dispatch(setLoading(false));
       });
@@ -69,16 +75,19 @@ const Login = () => {
       <button
         onClick={handleLogin}
         className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        disabled={loading}
       >
-        Login
+        {loading ? <ClipLoader color="#fff" size={20} /> : "Login"}
       </button>
       {loginError && <p className="text-red-500">{loginError}</p>}
-     {!isAdminRoute && <p className="mt-4 text-orange-500">
-        Don't have an account?{" "}
-        <Link to="/user/signup" className="text-orange-400">
-          Sign up
-        </Link>
-      </p>}
+      {!isAdminRoute && (
+        <p className="mt-4 text-orange-500">
+          Don't have an account?{" "}
+          <Link to="/user/signup" className="text-orange-400">
+            Sign up
+          </Link>
+        </p>
+      )}
     </div>
   );
 };

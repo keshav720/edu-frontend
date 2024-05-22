@@ -27,7 +27,6 @@ export const createCourse = async (courseData) => {
   }
 };
 
-// Function to get a course by its ID
 export const getCourseById = async (courseId) => {
   try {
     const response = await axiosInstance.get(`/courses/${courseId}`);
@@ -39,7 +38,6 @@ export const getCourseById = async (courseId) => {
   }
 };
 
-// Function to update a course by its ID
 export const updateCourseById = async (courseId, courseData) => {
   try {
     console.log("in service update course---", courseId, courseData);
@@ -55,7 +53,6 @@ export const updateCourseById = async (courseId, courseData) => {
   }
 };
 
-// Function to delete a course by its ID
 export const deleteCourseById = async (courseId) => {
   try {
     const response = await axiosInstance.delete(`/courses/${courseId}`);
@@ -66,7 +63,6 @@ export const deleteCourseById = async (courseId) => {
 };
 export const purchaseCourseById = async (userId, courseId) => {
   try {
-    console.log("purchaseCourseById-----");
     const response = await axiosInstance.post(
       `/users/${userId}/courses/${courseId}`
     );
@@ -77,7 +73,6 @@ export const purchaseCourseById = async (userId, courseId) => {
 };
 export const getMyCourseById = async (userId) => {
   try {
-    console.log("getmycourse byid-----");
     const response = await axiosInstance.get(`/users/${userId}/courses`);
     return response.data;
   } catch (error) {

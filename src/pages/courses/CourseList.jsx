@@ -16,7 +16,6 @@ const CourseList = () =>  {
   const Role = user?.role;
   const mycourse=location.pathname.endsWith("my-courses")?true:false;
   useEffect(() => {
-    console.log("mycourse--",mycourse);
     if (mycourse) {
         getMyCourseById(userId)
         .then((response) => {
@@ -34,7 +33,7 @@ const CourseList = () =>  {
         console.error("Error fetching courses:", error.message);
       });
     }
-  }, []);
+  }, [mycourse]);
   const handleCreateCourse = () => {
     navigate(`/${Role}/create-course`);
   };
@@ -63,7 +62,7 @@ const CourseList = () =>  {
                   to={`/${Role}/courses/${course.id}`}
                   className="block mt-2 text-blue-900 hover:text-orange-700"
                 >
-                  Learn More
+                  Learn More...
                 </Link>
               </div>
             </div>
