@@ -2,7 +2,7 @@ import { axiosInstance } from "../utils/axios";
 export const signUp = async (userData) => {
     try {
       
-      const response = await axiosInstance.post('/users/signup', userData);
+      const response = await axiosInstance.post('/auth/signup', userData);
       
       return response.data;
     } catch (error) {
@@ -13,7 +13,7 @@ export const signUp = async (userData) => {
   
   export const login = async (userData) => {
     try {
-      const response = await axiosInstance.post('/users/login', userData);
+      const response = await axiosInstance.post('/auth/login', userData);
       return response.data;
     } catch (error) {
       console.log("Error in login---",error);
